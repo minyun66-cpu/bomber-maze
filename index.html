@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>爆爆迷宮</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Huninn&family=Noto+Sans+TC:wght@400;700&display=swap">
 <style>
@@ -57,22 +57,29 @@ h1{font-size:1.9rem;letter-spacing:.06em;transform:rotate(-1.5deg);display:inlin
 
 .mgrid .ok{border-color:#2f9e44;box-shadow:inset 0 0 0 2px #8ce99a}.mgrid button[disabled]{opacity:.45}
 .msg{z-index:6}.pad{display:none!important}
-.joy,.bombBtn{display:none;position:absolute;z-index:3;touch-action:none;user-select:none;-webkit-user-select:none}
-.joy{left:14px;bottom:14px;width:130px;height:130px;border-radius:50%;background:rgba(255,251,232,.35);border:3px solid rgba(59,42,26,.6)}
-.knob{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:rgba(247,103,7,.85);border:3px solid #3b2a1a;pointer-events:none}
-.bombBtn{right:14px;bottom:20px;width:90px;height:90px;border-radius:50%;background:rgba(247,103,7,.88);border:3px solid #3b2a1a;color:#fff;font-weight:700;font-size:1rem}
-html.mob .joy,html.mob .bombBtn{display:block}
-html.mob,html.mob body{height:100%;overflow:hidden;margin:0}
-html.mob .wrap{max-width:none;padding:6px;display:grid;grid-template-columns:210px 1fr;grid-template-rows:auto auto auto auto 1fr;gap:6px;overflow:hidden;background:var(--bg)}
-html.mob h1,html.mob .help{display:none}
-html.mob #tomenu{float:none!important;grid-column:1;padding:4px!important}
-html.mob .hud{grid-column:1;grid-template-columns:1fr 1fr;gap:4px;margin:0}
-html.mob .hud div{padding:3px 6px}html.mob .hud b{font-size:.8rem}html.mob .hud small{font-size:.65rem}
-html.mob .tip{grid-column:1;height:100px;font-size:.7rem;margin:0;padding:4px 8px}
-html.mob .boss{grid-column:1;margin:0;flex-direction:column;gap:2px;padding:4px 8px;font-size:.8rem}
-html.mob .stage{grid-column:2;grid-row:1/6;align-self:center;justify-self:center}
+.ctl,.mbtn{display:none}
+.joy{position:relative;width:132px;height:132px;border-radius:50%;background:rgba(255,251,232,.6);border:3px solid rgba(59,42,26,.75);touch-action:none;flex:none}
+.knob{position:absolute;left:50%;top:50%;width:58px;height:58px;margin:-29px 0 0 -29px;border-radius:50%;background:#f76707;border:3px solid #3b2a1a;pointer-events:none}
+.bombBtn{width:100px;height:100px;border-radius:50%;background:#f76707;border:3px solid #3b2a1a;color:#fff;font-weight:700;font-size:1.05rem;touch-action:none;flex:none;box-shadow:3px 3px 0 #3b2a1a}
+.mbtn{position:absolute;top:6px;right:6px;z-index:4;width:34px;height:34px;border-radius:50%;border:3px solid #3b2a1a;background:#fffbe8;color:#3b2a1a;font-size:1rem;padding:0}
+html.mob{-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+html.mob,html.mob body{position:fixed;width:100%;height:100%;overflow:hidden;margin:0;overscroll-behavior:none;touch-action:manipulation}
+html.mob .wrap{max-width:none;margin:0;padding:calc(6px + env(safe-area-inset-top)) 6px calc(6px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:5px;overflow:hidden}
+html.mob h1,html.mob .help,html.mob #tomenu{display:none}
+html.mob .mbtn{display:block}
+html.mob .hud{grid-template-columns:.8fr .9fr .75fr 1.7fr;gap:4px;margin:0}
+html.mob .hud div{padding:2px 6px;border-width:2px;box-shadow:2px 2px 0 var(--line);transform:none}
+html.mob .hud small{font-size:.6rem}html.mob .hud b{font-size:.78rem;line-height:1.2}
+html.mob .tip{height:3.4em;font-size:.68rem;margin:0;padding:2px 8px;border-width:2px}
+html.mob .boss{margin:0;padding:2px 8px;font-size:.72rem;border-width:2px;box-shadow:none}
+html.mob .stage{flex:none;align-self:center;border-width:3px;box-shadow:none}
 html.mob canvas{width:100%;height:100%}
-html.mob .msg h2{font-size:1.4rem}html.mob .msg p{font-size:.8rem}html.mob .opt{min-width:160px;padding:6px 12px}
+html.mob .ctl{display:flex;flex:1;min-height:0;justify-content:space-between;align-items:center;padding:0 14px}
+html.mob.land .tip,html.mob.land .boss{display:none}
+html.mob.land .ctl{position:fixed;left:0;right:0;bottom:0;padding:0 18px 14px;align-items:flex-end;pointer-events:none;z-index:5}
+html.mob.land .joy,html.mob.land .bombBtn{pointer-events:auto}
+html.mob .msg h2{font-size:1.3rem}html.mob .msg p{font-size:.78rem}html.mob .opt{min-width:150px;padding:6px 12px}
+html.mob .mgrid button{padding:4px 0}
 </style>
 </head>
 <body>
@@ -94,9 +101,9 @@ html.mob .msg h2{font-size:1.4rem}html.mob .msg p{font-size:.8rem}html.mob .opt{
       <button class="go" id="mb" type="button">開始遊戲</button>
     </div>
     <div class="msg show" id="menu"></div>
-    <div class="joy" id="joy"><div class="knob" id="knob"></div></div>
-    <button class="bombBtn" id="bombBtn" type="button">放炸彈</button>
+    <button class="mbtn" id="tomenu2" type="button" aria-label="選單">☰</button>
   </div>
+  <div class="ctl" id="ctl"><div class="joy" id="joy"><div class="knob" id="knob"></div></div><button class="bombBtn" id="bombBtn" type="button">放炸彈</button></div>
   <div class="pad" id="pad">
     <button data-k="ArrowLeft" type="button" aria-label="左">◀</button>
     <button data-k="ArrowUp" type="button" aria-label="上">▲</button>
@@ -896,7 +903,7 @@ html.mob .msg h2{font-size:1.4rem}html.mob .msg p{font-size:.8rem}html.mob .opt{
     if(scr==='who'||!who){
       h='<h2>誰在玩？</h2><p>選擇玩家或輸入新名稱，進度會分開記錄在這台裝置上。</p>';
       Object.keys(SAVE.players).forEach(function(n){h+='<button class="opt" data-a="pick" data-n="'+esc2(n)+'" type="button">'+esc2(n)+'（已通關 '+SAVE.players[n].cl+' 關）</button>'});
-      h+='<div><input id="pname" maxlength="10" placeholder="新玩家名稱" style="padding:8px;border:3px solid #3b2a1a;border-radius:10px;font:inherit;max-width:150px"> <button class="go" data-a="newp" type="button">建立並開始</button></div>';
+      h+='<div><input id="pname" maxlength="10" placeholder="新玩家名稱" style="padding:8px;border:3px solid #3b2a1a;border-radius:10px;font:inherit;font-size:16px;max-width:150px"> <button class="go" data-a="newp" type="button">建立並開始</button></div>';
     }else if(scr==='worlds'){
       h='<h2>選擇世界</h2><p>玩家：'+esc2(who)+'。正式版共 35 關，每關有小魔王，5 的倍數有中魔王。</p>'
        +'<button class="opt" data-a="ninja" type="button">🥷 忍者世界（35 關）</button>'
@@ -930,7 +937,6 @@ html.mob .msg h2{font-size:1.4rem}html.mob .msg p{font-size:.8rem}html.mob .opt{
     carry={score:0,b:1,r:2,s:0};
     menu.classList.remove('show');
     init();hud();showReady();
-    if(isMob())tryFull();
   }
   menu.addEventListener('click',function(e){
     var t=e.target.closest('[data-a]');if(!t||t.disabled)return;var a=t.dataset.a;
@@ -941,26 +947,28 @@ html.mob .msg h2{font-size:1.4rem}html.mob .msg p{font-size:.8rem}html.mob .opt{
     else if(a==='main')showMenu('main');else if(a==='lv')begin('ninja',+t.dataset.n);else if(a==='rnd')begin('ninja',1+rnd(unlockedN()));
   });
   menu.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target&&e.target.id==='pname'){if(pickPlayer(e.target.value))showMenu('main')}});
-  $('tomenu').onclick=function(){showMenu(who?'main':'who')};
+  $('tomenu').onclick=function(){showMenu(who?'main':'who')};$('tomenu2').onclick=function(){showMenu(who?'main':'who')};
 
   function fit(){
     if(!document.querySelector)return;
     var de=document.documentElement,wr=document.querySelector('.wrap'),st=document.querySelector('.stage');
-    mob=isMob();rot=mob&&window.innerHeight>window.innerWidth;
-    de.classList.toggle('mob',mob);de.classList.toggle('rot',rot);
+    mob=isMob();var land=mob&&window.innerWidth>window.innerHeight;
+    de.classList.toggle('mob',mob);de.classList.toggle('land',land);
     if(!wr||!st)return;
-    if(!mob){wr.removeAttribute('style');st.style.width='';st.style.height='';return}
-    var iw=window.innerWidth,ih=window.innerHeight,w=rot?ih:iw,h=rot?iw:ih;
-    wr.style.cssText='position:fixed;top:0;left:'+(rot?iw:0)+'px;width:'+w+'px;height:'+h+'px;'+(rot?'transform-origin:0 0;transform:rotate(90deg);':'');
-    var sc=Math.min((w-12-210-8)/600,(h-12)/520);
+    if(!mob){wr.style.width='';wr.style.height='';st.style.width='';st.style.height='';return}
+    var iw=window.innerWidth,ih=window.innerHeight;
+    wr.style.width=iw+'px';wr.style.height=ih+'px';
+    var q=function(sel){var e=document.querySelector(sel);return e&&e.offsetParent!==null?e.offsetHeight+5:0};
+    var used=12+30+q('.hud')+q('.tip')+q('.boss'),availH=ih-used-(land?0:140),availW=iw-12;
+    var sc=Math.max(0.3,Math.min(availW/600,availH/520));
     st.style.width=Math.floor(600*sc)+'px';st.style.height=Math.floor(520*sc)+'px';
   }
-  window.addEventListener('resize',fit);window.addEventListener('orientationchange',fit);
+  window.addEventListener('resize',fit);window.addEventListener('orientationchange',fit);if(window.visualViewport)visualViewport.addEventListener('resize',fit);
   var joy=$('joy'),knob=$('knob'),jid=null;
   function jclear(){ORD.forEach(function(k){delete keys[k]});keys.__last=null}
   function jmove(e){
     var r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
-    var lx=rot?dy:dx,ly=rot?-dx:dy,R=r.width/2,len=Math.hypot(lx,ly),sc=len>R?R/len:1;
+    var lx=dx,ly=dy,R=r.width/2,len=Math.hypot(lx,ly),sc=len>R?R/len:1;
     knob.style.transform='translate('+lx*sc+'px,'+ly*sc+'px)';
     jclear();
     if(len>R*0.25){var k=Math.abs(lx)>Math.abs(ly)?(lx>0?'ArrowRight':'ArrowLeft'):(ly>0?'ArrowDown':'ArrowUp');keys[k]=true;keys.__last=k}
@@ -970,6 +978,10 @@ html.mob .msg h2{font-size:1.4rem}html.mob .msg p{font-size:.8rem}html.mob .opt{
   var jend=function(e){if(e.pointerId===jid){jid=null;jclear();knob.style.transform='none'}};
   joy.addEventListener('pointerup',jend);joy.addEventListener('pointercancel',jend);
   $('bombBtn').addEventListener('pointerdown',function(e){e.preventDefault();placeBomb()});
+  if(document.addEventListener){
+    document.addEventListener('touchmove',function(e){if(isMob()&&!(e.target&&e.target.closest&&e.target.closest('#menu,.tip')))e.preventDefault()},{passive:false});
+    ['gesturestart','gesturechange'].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()})});
+  }
   window.__dbg={go:function(){state='play'},unlock:function(){who='T';SAVE.players.T={cl:35}},begin:begin,update:update,draw:draw,drawOver:drawOver,get:function(){return {ts:ts,player:player,boss:boss,hz:hz,pj:pj,enemies:enemies,state:state,bombs:bombs}}};
 
   function loop(now){
